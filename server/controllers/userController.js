@@ -41,7 +41,14 @@ exports.getUserProfile = (req, res) => {
 };
 
 
-exports.getUserFeed = () => {};
+exports.getUserFeed = async (req, res) => {
+  const { following, _id } = req.profile
+
+  following.push(_id)
+  const users = await User.find({ _id: { $nin: following } })
+      .select('_id name avatar')
+  res.json(users)
+};
 
 exports.uploadAvatar = () => {};
 
