@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const User = mongoose.model('User');
+
+
 
 exports.getUsers = async (req, res) => {
   const users = await User.find().select('_id name email createdAt updatedAt');
@@ -8,28 +10,36 @@ exports.getUsers = async (req, res) => {
 
 exports.getAuthUser = (req, res) => {
   if(!req.isAuthUser) {
-    res.status(403).json({
-      message: "You are unauthenticated. Please sign in or sign up"
+   res.status(403).json({
+      message: "You're unauthenticated. Please sign in or sign up."
     });
-    return res.redirect("/signin");
+    return res.redirect('/signin')
   }
   res.json(req.user);
 };
 
 exports.getUserById = async (req, res, next, id) => {
-  const user = await User.findOne({ _id: id })
+  const user = await User.findOne({ _id: id });
   req.profile = user;
 
   const profileId = mongoose.Types.ObjectId(req.profile._id)
 
-  if (profileId.equals(req.user._id)) {
+  if (profileId.equals(req.user._id)){
     req.isAuthUser = true;
     return next();
   }
   next();
 };
 
-exports.getUserProfile = () => {};
+exports.getUserProfile = (req, res) => {
+  if (!req.profile) {
+    return res.status(404).json({
+      message: "No user found"
+    });
+  }
+  res.json(req.profile);
+};
+
 
 exports.getUserFeed = () => {};
 
