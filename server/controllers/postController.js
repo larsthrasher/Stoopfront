@@ -38,7 +38,7 @@ exports.addPost = async (req, res) => {
   await Post.populate(post, {
     path: 'postedBy',
     select: '_id name avatar'
-  })
+  });
   res.json(post);
 };
 
@@ -46,9 +46,22 @@ exports.deletePost = () => {};
 
 exports.getPostById = () => {};
 
-exports.getPostsByUser = () => {};
+exports.getPostsByUser = async (req, res) => {
+  const posts = await Post.find({ postedBy: req.profile._id }).sort({
+    createdAt: "desc"
+  });
+  res.json(posts);
+};
 
-exports.getPostFeed = () => {};
+exports.getPostFeed = async (req, res) => {
+  const { following, _id } = req.profile;
+
+  following.push(_id)
+  const posts = await Post.find({ postedBy: { $in: following } }).sort({
+    createdAt: "desc"
+  });
+  res.json(posts);
+};
 
 exports.toggleLike = () => {};
 
