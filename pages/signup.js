@@ -15,15 +15,27 @@ import Slide from "@material-ui/core/Slide";
 import CreateIcon from '@material-ui/icons/Create';
 import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Link from 'next/link'
 
 import { signupUser } from '../lib/auth';
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />
+}
 
 class Signup extends React.Component {
   state = {
     name: '',
     email: '',
-    password: ''
+    password: '',
+    error: '',
+    createdUser: '',
+    openError: false,
+    openSuccess: false,
+    isLoading: false
   };
+
+  handleClose = () => this.setState({ openError: false })
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -35,11 +47,27 @@ class Signup extends React.Component {
 
     event.preventDefault();
     const user = { name, email, password };
+    this.setState({ isLoading: true, error: "" })
     signupUser(user)
+      .then(createdUser => {
+        this.setState({
+          createdUser,
+          error: '',
+          openSuccess: true,
+          isLoading: false
+        });
+      })
+        .catch(this.showError);
+  };
+
+  showError = err => {
+    const error = err.response && err.response.data || err.message;
+    this.setState({ error, openError: true, isLoading: false  });
   }
 
   render() {
     const { classes } = this.props;
+    const { error, openError, openSuccess, createdUser, isLoading } = this.state;
 
     return (
       <div className={classes.root}>
@@ -81,13 +109,48 @@ class Signup extends React.Component {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={isLoading}
               className={classes.submit}
             >
-            Sign up
+              {isLoading ? "Signing up..." : "Sign up"}
             </Button>
           </form>
 
+          {error && <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            open={openError}
+            onClose={this.handleClose}
+            autoHideDuration={6000}
+            message={<span className={classes.snack}>{error}</span>}
+          />}
         </Paper>
+
+
+        <Dialog
+          open={openSuccess}
+          disableBackdropClick={true}
+          transitionComponent={ Transition }
+        >
+          <DialogTitle>
+            <VerifiedUserTwoTone className={classes.icon} />
+            New Account
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+            User {createdUser} successfully created.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" variant="contained">
+              <Link href="/signin">
+                <a className={classes.signinLink}>Sign in</a>
+              </Link>
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
