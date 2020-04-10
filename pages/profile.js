@@ -13,6 +13,7 @@ import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 import FollowUser from '../components/profile/FollowUser';
+import DeleteUser from '../components/profile/DeleteUser';
 
 import { authInitialProps } from '../lib/auth';
 import { getUser } from '../lib/api';
@@ -93,6 +94,7 @@ class Profile extends React.Component {
                       </IconButton>
                     </a>
                   </Link>
+                  <DeleteUser user={user}/>
                 </ListItemSecondaryAction>
               ) : (
                 <FollowUser
