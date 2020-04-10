@@ -5,7 +5,9 @@ import Button from "@material-ui/core/Button";
 import BusinessTwoTone from "@material-ui/icons/BusinessTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import ActiveLink from './ActiveLink'
+import ActiveLink from './ActiveLink';
+import { signoutUser } from '../lib/auth';
+
 
 const Navbar = ({ classes, router, pageProps: { auth } }) => {
   const { user = {} } = auth || {};
@@ -34,7 +36,7 @@ const Navbar = ({ classes, router, pageProps: { auth } }) => {
             <Button>
               <ActiveLink href='/profile'>Profile</ActiveLink>
             </Button>
-            <Button variant='outlined'>Sign out</Button>
+            <Button onClick={signoutUser} variant='outlined'>Sign out</Button>
           </div>
         ) : (
           //Unauth
