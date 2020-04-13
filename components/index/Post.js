@@ -15,10 +15,40 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Link from 'next/link';
 
 class Post extends React.Component {
-  state = {};
+  state = {
+    isLiked: false,
+    numLikes: 0,
+    comments: []
+  };
+
+  componentDidMount() {
+    this.setState({
+      isLiked: this.checkLiked(this.props.post.likes),
+      numLikes: this.props.post.likes.length
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.post.likes.length !== this.props.post.likes.length) {
+      this.setState({
+        isLiked: this.checkLiked(this.props.post.likes),
+        numLikes: this.props.post.likes.length
+      })
+    }
+  }
+
+  checkLiked = likes => likes.includes(this.props.auth.user._id)
 
   render() {
-    const { classes, post, auth, isDeletingPost, handleDeletePost } = this.props;
+    const {
+      classes,
+      post,
+      auth,
+      isDeletingPost,
+      handleDeletePost,
+      handleToggleLike
+     } = this.props;
+    const { isLiked, numLikes, comments } = this.state;
     const isPostCreator = post.postedBy._id === auth.user._id;
 
     return (
@@ -56,12 +86,16 @@ class Post extends React.Component {
 
       <CardActions>
         <IconButton onClick={() => handleToggleLike(post)} className={classes.button}>
-          <Badge badgeContent={0} color="secondary">
+          <Badge badgeContent={numLikes} color="secondary">
+            {isLiked ? (
+              <Favorite className={classes.favoriteIcon}/>
+            ):(
               <FavoriteBorder className={classes.favoriteIcon} />
+            )}
           </Badge>
         </IconButton>
         <IconButton className={classes.button}>
-          <Badge badgeContent={0} color="primary">
+          <Badge badgeContent={comments.length} color="primary">
             <Comment className={classes.commentIcon}/>
           </Badge>
         </IconButton>
