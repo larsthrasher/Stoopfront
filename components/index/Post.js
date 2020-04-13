@@ -94,18 +94,21 @@ class Post extends React.PureComponent {
       </CardContent>
 
       <CardActions>
-        <IconButton onClick={() => handleToggleLike(post)} className={classes.button}>
+        <IconButton
+          onClick={() => handleToggleLike(post)}
+          className={classes.button}
+        >
           <Badge badgeContent={numLikes} color="secondary">
             {isLiked ? (
-              <Favorite className={classes.favoriteIcon}/>
-            ):(
+              <Favorite className={classes.favoriteIcon} />
+            ) : (
               <FavoriteBorder className={classes.favoriteIcon} />
             )}
           </Badge>
         </IconButton>
         <IconButton className={classes.button}>
           <Badge badgeContent={comments.length} color="primary">
-            <Comment className={classes.commentIcon}/>
+            <Comment className={classes.commentIcon} />
           </Badge>
         </IconButton>
       </CardActions>
