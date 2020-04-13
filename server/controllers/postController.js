@@ -6,8 +6,8 @@ const Post = mongoose.model('Post')
 const imageUploadOptions = {
   storage: multer.memoryStorage(),
   limits: {
-    //Storing image files up to 2mb
-    filesSize: 1024 * 1024 * 2
+    //Storing image files up to 5mb
+    filesSize: 1024 * 1024 * 5
   },
   fileFilter: (req, file, next) => {
     if (file.mimetype.startsWith('image/')){

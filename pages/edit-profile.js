@@ -54,7 +54,6 @@ class EditProfile extends React.Component {
       });
   }
 
-
   handleChange = event => {
     let inputValue;
 
@@ -115,6 +114,7 @@ class EditProfile extends React.Component {
             Edit Profile
           </Typography>
 
+          {/* Edit Profile Form */}
           <form onSubmit={this.handleSubmit} className={classes.form}>
             {isLoading ? (
               <Avatar className={classes.bigAvatar}>

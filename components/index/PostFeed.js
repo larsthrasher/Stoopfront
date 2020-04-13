@@ -151,7 +151,7 @@ class PostFeed extends React.Component {
           color="primary"
           className={classes.title}
         >
-          Post Feed
+          Things
         </Typography>
         <NewPost
           auth={auth}
