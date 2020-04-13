@@ -11,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from "@material-ui/core/Divider";
 import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
+import format from 'date-fns/format'
 import Link from 'next/link';
 import FollowUser from '../components/profile/FollowUser';
 import DeleteUser from '../components/profile/DeleteUser';
@@ -137,6 +138,8 @@ class Profile extends React.Component {
       }).catch(err => console.error(err))
   };
 
+  formatDate = date => format(date, "dddd, MMMM Do, YYYY")
+
   render() {
     const { classes, auth } = this.props;
     const { isLoading, posts, user, isAuth, isFollowing, isDeletingPost } = this.state;
@@ -190,7 +193,7 @@ class Profile extends React.Component {
             <ListItem>
               <ListItemText
                 primary={user.about}
-                secondary={`Joined: ${user.createdAt}`}
+                secondary={`Joined: ${this.formatDate(user.createdAt)}`}
               />
             </ListItem>
 
