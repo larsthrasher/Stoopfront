@@ -8,7 +8,8 @@ import {
   deletePost,
   likePost,
   unlikePost,
-  getPostFeed
+  getPostFeed,
+  addComment
 } from '../../lib/api'
 
 class PostFeed extends React.Component {
@@ -103,6 +104,22 @@ class PostFeed extends React.Component {
         ]
         this.setState({ posts: updatedPosts })
       }).catch(err => console.error(err))
+  };
+
+  handleAddComment = (postId, text) => {
+    const comment = { text };
+    addComment(postId, comment)
+      .then(postData => {
+        const postIndex = this.state.posts.findIndex(
+          post => post._id === postData._id
+        )
+        const updatedPosts = [
+          ...this.state.posts.slice(0, postIndex),
+          postData,
+          ...this.state.posts.slice(postIndex + 1)
+        ]
+        this.setState({ posts: updatedPosts })
+      }).catch(err => console.error(err))
   }
 
   render() {
@@ -136,6 +153,7 @@ class PostFeed extends React.Component {
             isDeletingPost={isDeletingPost}
             handleDeletePost={this.handleDeletePost}
             handleToggleLike={this.handleToggleLike}
+            handleAddComment={this.handleAddComment}
           />
         ))}
       </div>
