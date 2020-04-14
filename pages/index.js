@@ -3,19 +3,20 @@ import Drawer from "@material-ui/core/Drawer";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
+import Router from "next/router";
+
 import PostFeed from "../components/index/PostFeed";
-import UserFeed from '../components/index/UserFeed';
-import Router from 'next/router';
+import UserFeed from "../components/index/UserFeed";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { authInitialProps } from '../lib/auth';
+import { authInitialProps } from "../lib/auth";
 
 const Index = ({ classes, auth }) => (
   <main className={classes.root}>
-    { auth.user && auth.user._id ? (
+    {auth.user && auth.user._id ? (
+      // Auth User Page
       <Grid container>
         <Grid item xs={12} sm={12} md={7}>
-          <PostFeed  auth={auth}/>
+          <PostFeed auth={auth} />
         </Grid>
         <Grid item className={classes.drawerContainer}>
           <Drawer
@@ -31,6 +32,7 @@ const Index = ({ classes, auth }) => (
         </Grid>
       </Grid>
     ) : (
+      // Splash Page (UnAuth Page)
       <Grid
         justify="center"
         alignItems="center"
@@ -45,28 +47,28 @@ const Index = ({ classes, auth }) => (
           color="textPrimary"
           gutterBottom
         >
-        Reduce And Reuse
+          Reduce And Reuse
         </Typography>
         <Typography
           variant="h6"
           align="center"
           color="textSecondary"
-          component='p'
+          component="p"
         >
-         Donate or collect goods and services across the New York metropolitan area, free of cost.
+          New York's donation station.  Donate and collect free goods and services in the metropolitan area. Curb alert! If it's raining outside, put it on Stoopfront. 
         </Typography>
         <Button
           className={classes.fabButton}
-          variant='extendedFab'
-          color='primary'
-          onClick={() => Router.push('/signup')}
+          variant="extendedFab"
+          color="primary"
+          onClick={() => Router.push("/signup")}
         >
           Get Started
         </Button>
       </Grid>
     )}
   </main>
-)
+);
 
 const styles = theme => ({
   root: {
@@ -98,11 +100,6 @@ const styles = theme => ({
   fabButton: {
     margin: theme.spacing.unit * 3
   },
-  bigAvatar: {
-    width: 60,
-    height: 60,
-    margin: "auto"
-  },
   heroContent: {
     maxWidth: 600,
     paddingTop: theme.spacing.unit * 8,
@@ -111,6 +108,6 @@ const styles = theme => ({
   }
 });
 
-Index.getInitialProps = authInitialProps()
+Index.getInitialProps = authInitialProps();
 
 export default withStyles(styles)(Index);

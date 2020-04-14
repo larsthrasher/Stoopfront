@@ -11,12 +11,13 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from "@material-ui/core/Divider";
 import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
-import format from 'date-fns/format'
-import Link from 'next/link';
-import FollowUser from '../components/profile/FollowUser';
-import DeleteUser from '../components/profile/DeleteUser';
-import ProfileTabs from '../components/profile/ProfileTabs';
-import { authInitialProps } from '../lib/auth';
+import format from "date-fns/format";
+import Link from "next/link";
+
+import ProfileTabs from "../components/profile/ProfileTabs";
+import DeleteUser from "../components/profile/DeleteUser";
+import FollowUser from "../components/profile/FollowUser";
+import { authInitialProps } from "../lib/auth";
 import {
   getUser,
   getPostsByUser,
@@ -25,7 +26,7 @@ import {
   unlikePost,
   addComment,
   deleteComment
- } from '../lib/api';
+} from "../lib/api";
 
 class Profile extends React.Component {
   state = {
@@ -40,10 +41,11 @@ class Profile extends React.Component {
   componentDidMount() {
     const { userId, auth } = this.props;
 
-    const isAuth = auth.user._id === userId;
     getUser(userId).then(async user => {
-      const isFollowing = this.checkFollow(auth, user)
-      const posts = await getPostsByUser(userId)
+      const isAuth = auth.user._id === userId;
+      const isFollowing = this.checkFollow(auth, user);
+      const posts = await getPostsByUser(userId);
+
       this.setState({
         user,
         posts,
@@ -56,7 +58,7 @@ class Profile extends React.Component {
 
   checkFollow = (auth, user) => {
     return user.followers.findIndex(follower => follower._id === auth.user._id) > -1
-  };
+  }
 
   toggleFollow = sendRequest => {
     const { userId } = this.props;
@@ -91,20 +93,21 @@ class Profile extends React.Component {
   handleToggleLike = post => {
     const { auth } = this.props;
 
-    const isPostLiked = post.likes.includes(auth.user._id)
+    const isPostLiked = post.likes.includes(auth.user._id);
     const sendRequest = isPostLiked ? unlikePost : likePost;
     sendRequest(post._id)
       .then(postData => {
         const postIndex = this.state.posts.findIndex(
           post => post._id === postData._id
-        )
+        );
         const updatedPosts = [
           ...this.state.posts.slice(0, postIndex),
           postData,
           ...this.state.posts.slice(postIndex + 1)
-        ]
-        this.setState({ posts: updatedPosts })
-      }).catch(err => console.error(err))
+        ];
+        this.setState({ posts: updatedPosts });
+      })
+      .catch(err => console.error(err));
   };
 
   handleAddComment = (postId, text) => {
@@ -113,14 +116,14 @@ class Profile extends React.Component {
       .then(postData => {
         const postIndex = this.state.posts.findIndex(
           post => post._id === postData._id
-        )
+        );
         const updatedPosts = [
           ...this.state.posts.slice(0, postIndex),
           postData,
           ...this.state.posts.slice(postIndex + 1)
         ]
         this.setState({ posts: updatedPosts })
-      }).catch(err => console.error(err))
+      }).catch(err => console.error(err));
   }
 
   handleDeleteComment = (postId, comment) => {
@@ -136,7 +139,7 @@ class Profile extends React.Component {
         ]
         this.setState({ posts: updatedPosts })
       }).catch(err => console.error(err))
-  };
+  }
 
   formatDate = date => format(date, "dddd, MMMM Do, YYYY")
 
@@ -170,17 +173,19 @@ class Profile extends React.Component {
               <ListItemAvatar>
                 <Avatar src={user.avatar} className={classes.bigAvatar} />
               </ListItemAvatar>
-              <ListItemText primary={user.name} secondary={user.email}/>
+              <ListItemText primary={user.name} secondary={user.email} />
+
+
               {isAuth ? (
                 <ListItemSecondaryAction>
-                  <Link href='edit-profile'>
+                  <Link href="/edit-profile">
                     <a>
                       <IconButton color="primary">
                         <Edit />
                       </IconButton>
                     </a>
                   </Link>
-                  <DeleteUser user={user}/>
+                  <DeleteUser user={user} />
                 </ListItemSecondaryAction>
               ) : (
                 <FollowUser
